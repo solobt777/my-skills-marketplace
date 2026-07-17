@@ -2,6 +2,7 @@
 
 You can install and use the `security-audit` plugin at either a **project level** (specific to your current workspace) or a **user level** (available globally across your machine). 
 
+
 ---
 
 ## 1. Installation
