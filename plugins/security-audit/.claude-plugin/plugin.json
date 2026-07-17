@@ -1,0 +1,5 @@
+{
+  "name": "Security Audit Plugin",
+  "description": "Use when asked to audit, scan, or review an application's codebase for security vulnerabilities, or when searching for defense-in-depth improvements. This skill automates a systematic security audit based on the OWASP Top 10:2025 framework. It handles both existing local workspaces and remote GitHub repositories (cloning them if necessary), scans all submodules across the entire project structure, assesses findings against a standard 5-tier severity scale, and generates a structured markdown report under audit/<YYYY-MM-DD>/.",
+  "version": "1.0.0"
+}
