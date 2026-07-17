@@ -1,100 +1,75 @@
-1. The Blueprint: Directory Structure
-A marketplace is essentially a Git repository that houses one or more plugins. Each plugin can contain multiple skills.
+# Security Audit Plugin Installation & Usage Guide
 
-Set up your repository with this structural layout:
+You can install and use the `security-audit` plugin at either a **project level** (specific to your current workspace) or a **user level** (available globally across your machine). 
 
-Plaintext
-your-marketplace-repo/
-├── .claude-plugin/          # Or .github/ depending on targeted ecosystem
-│   └── marketplace.json     # The main catalog listing all plugins
-└── plugins/
-    └── your-custom-plugin/
-        ├── .claude-plugin/
-        │   └── plugin.json  # Manifest describing this specific plugin
-        └── skills/
-            └── your-skill/
-                └── SKILL.md # The core markdown prompt and instructions
-
-
-2. Defining the Capability: SKILL.md
-The SKILL.md file contains frontmatter metadata followed by clear instructions written in Markdown. The AI reads this file on-demand when a task matches the skill's description.  
-
-Create your file at plugins/your-custom-plugin/skills/your-skill/SKILL.md
-
-Markdown
----
-name: schema-validator
-description: Validates database migration files against internal enterprise schemas.
-tools: [fs_read, fs_write]
 ---
 
-Review the chosen database migration scripts for naming conventions, column restrictions, and potential locking risks. 
+## 1. Installation
 
-Ensure that:
-- Tables use lower_snake_case.
-- Indexes are added concurrently where appropriate.
-- Column drop operations contain a fallback script comment.
+Follow these steps to add the marketplace and install the plugin.
 
-Be concise and output an actionable checklist.
+### Step 1: Add the Marketplace
+Open your project terminal or workspace and run the following command to register the plugin marketplace:
 
+```bash
+claude plugin marketplace add https://github.com/solobt777/my-skills-marketplace
+```
 
-3. Registering the Plugin and MarketplaceTo bundle your skills so an agent can parse them, you need to create the manifest and the catalog files.
+### Step 2: Install the Plugin
+Choose whether you want to install it for your current project only, or globally for your user profile:
 
-## Step A: The Plugin Manifest
-Create .claude-plugin/plugin.json inside your specific plugin directory to version-control the package:  
+**For Project Level:**
+```bash
+claude plugin install security-audit@security-audit-skills --scope project
+```
 
-JSON
-{
-  "name": "enterprise-dev-tools",
-  "description": "Custom engineering guardrails and automation utilities",
-  "version": "1.0.0"
-}
+**For User Level:**
+```bash
+claude plugin install security-audit@security-audit-skills --scope user
+```
 
+---
 
-## Step B: The Marketplace Catalog
-Create marketplace.json in the root of your repository so the agent knows what packages are available to be installed:  JSON{
-  "name": "solomon-public-skills",
-  "owner": {
-    "name": "Solomon Rajkumar"
-  },
-  "plugins": [
-    {
-      "name": "enterprise-dev-tools",
-      "source": "./plugins/enterprise-dev-tools",
-      "description": "Custom engineering guardrails and automation utilities",
-      "category": "Development"
-    }
-  ]
-}
+## 2. Verification
 
+To verify that the plugin has been successfully installed and enabled, run your validation or plugin list command. It should show details matching your configuration:
 
-## 4. Distributing to the World
+```text
+security-audit@security-audit-skills
+Version: 1.0.0
+Scope: project
+Status: ✔ enabled
+```
 
-Once your local structure is verified, publish it via standard git distribution workflows:
+---
 
-1.Push to a Git Provider:
-GitHub or GitLab.
-Commit your files and push the repository to a public GitHub repo 
-(e.g., [github.com/your-username/my-skills-marketplace](https://github.com/your-username/my-skills-marketplace)).
+## 3. How to Use
 
+The plugin is language and framework-agnostic—it works with **any tech stack**. You can run it inside an active project or an entirely empty directory.
 
-2.Register the Marketplace:
-User action.
-Users can now register your entire marketplace directly into their local development CLI tools or IDE plugins using your repository URL:
+* **In an Existing Project:** Trigger the plugin within your workspace directory. It will scan your local files and analyze your code.
+* **In an Empty Folder:** If you run the plugin inside an empty directory, it will automatically prompt you for your remote Git repository URL. It will clone the repository down, run the analysis, and perform the security audit.
 
-Bash
-/plugin marketplace add https://github.com/your-username/my-skills-marketplace
+### Output
+Once the audit finishes, the plugin automatically creates a new folder structure inside your project root containing your results:
+* `audit/security-report.md`
 
+---
 
-## Install Individual Plugins
-Execution
-Once the catalog is linked, users pull down the specific capabilities they need:
+## 4. Managing Scopes & Removal
 
-Bash
-/plugin install enterprise-dev-tools@solomon-public-skills
+### Changing Scopes
+If you want to shift the plugin from a project-specific scope to a global user scope (or vice-versa), disable it in one scope and enable it in the other:
 
+```bash
+claude plugin disable security-audit@security-audit-skills --scope project
+claude plugin enable security-audit@security-audit-skills --scope user
+```
 
-Design Tip: Agents use On-Demand Loading. They scan the description fields inside your marketplace catalogs to choose when to trigger a skill. Write highly explicit descriptions so the agent knows exactly when your skill is appropriate for a given task.# my-skills-marketplace
-# my-skills-marketplace
-# my-skills-marketplace
-# my-skills-marketplace
+### Uninstalling the Plugin
+To completely remove the plugin from your environment, run:
+
+```bash
+claude plugin uninstall security-audit@security-audit-skills
+```
+ 
